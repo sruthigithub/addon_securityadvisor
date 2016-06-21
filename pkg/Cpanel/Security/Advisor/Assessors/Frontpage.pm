@@ -48,11 +48,11 @@ sub _is_frontpage_installed {
             {
                 'key'        => 'Frontpage_is_installed',
                 'type'       => $Cpanel::Security::Advisor::ADVISE_BAD,
-                'text'       => ['Frontpage is installed'],
-                'suggestion' => [
+                'text'       => $self->_lh->maketext('Frontpage is installed'),
+                'suggestion' => $self->_lh->maketext(
                     'Rebuild using “[output,url,_1,EasyApache,_2,_3]” without Frontpage selected, then uninstall the Frontpage RPM (rpm -e frontpage)',
                     $self->base_path('cgi/easyapache.pl?action=_pre_cpanel_sync_screen'), 'target', '_blank',
-                ],
+                ),
             }
         );
     }
@@ -71,11 +71,11 @@ sub _is_frontpage_in_easyapache {
             {
                 'key'        => 'Frontpage_easyapache_includes_module',
                 'type'       => $Cpanel::Security::Advisor::ADVISE_BAD,
-                'text'       => ['EasyApache includes Microsoft® Frontpage modules'],
-                'suggestion' => [
+                'text'       => $self->_lh->maketext('EasyApache includes Microsoft® Frontpage modules'),
+                'suggestion' => $self->_lh->maketext(
                     'Rebuild “[output,url,_1,EasyApache,_2,_3]” without Frontpage selected to remove the modules.',
                     $self->base_path('cgi/easyapache.pl?action=_pre_cpanel_sync_screen'), 'target', '_blank',
-                ],
+                ),
             }
         );
     }

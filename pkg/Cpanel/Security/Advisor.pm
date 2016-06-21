@@ -245,7 +245,6 @@ sub add_advice {
         }
     }
 
-    $self->expand_advice_maketext($advice);
     $self->{'comet'}->add_message(
         $self->{'channel'},
         Cpanel::JSON::Dump(
@@ -260,16 +259,6 @@ sub add_advice {
             }
         ),
     );
-    return;
-}
-
-sub expand_advice_maketext {
-    my ( $self, $advice ) = @_;
-    foreach my $param (qw(text suggestion)) {
-        next unless defined $advice->{$param};
-        $advice->{$param} = $self->{'locale'}->maketext( ref $advice->{$param} eq 'ARRAY' ? @{ $advice->{$param} } : $advice->{$param} );
-    }
-
     return;
 }
 

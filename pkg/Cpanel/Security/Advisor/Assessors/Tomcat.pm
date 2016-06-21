@@ -44,11 +44,11 @@ sub _is_tomcat5_installed {
         $security_advisor_obj->add_advice(
             {
                 'type'       => $Cpanel::Security::Advisor::ADVISE_BAD,
-                'text'       => ['Tomcat 5.5 is installed, but is EOL.'],
-                'suggestion' => [
+                'text'       => $self->_lh->maketext('Tomcat 5.5 is installed, but is EOL.'),
+                'suggestion' => $self->_lh->maketext(
                     'Rebuild “[output,url,_1,EasyApache,_2,_3]” without Tomcat 5.5.x selected (or select the newest version of Tomcat), and manually remove the old Tomcat files.',
                     $self->base_path('cgi/easyapache.pl?action=_pre_cpanel_sync_screen'), 'target', '_blank',
-                ],
+                ),
             }
         );
     }

@@ -60,8 +60,8 @@ sub _check_for_outdated_processes {
     if ( !$exec ) {
         $self->add_info_advice(
             'key'      => 'Processes_unable_to_check_running_executables',
-            text       => ['Unable to check whether running executables are up-to-date.'],
-            suggestion => [ 'Install the ‘[_1]’ command by running ‘[_2]’ on the command line to get notifications when executables are updated but the existing processes are not restarted.', $command, $package_install_cmd ],
+            text       => $self->_lh->maketext('Unable to check whether running executables are up-to-date.'),
+            suggestion => $self->_lh->maketext( 'Install the ‘[_1]’ command by running ‘[_2]’ on the command line to get notifications when executables are updated but the existing processes are not restarted.', $command, $package_install_cmd ),
         );
     }
     else {
@@ -70,32 +70,32 @@ sub _check_for_outdated_processes {
         if ( $proc->stdout() ) {
             $self->add_bad_advice(
                 'key'      => 'Processes_detected_running_from_outdated_executables',
-                text       => ['Detected processes that are running outdated binary executables.'],
-                suggestion => [
+                text       => $self->_lh->maketext('Detected processes that are running outdated binary executables.'),
+                suggestion => $self->_lh->maketext(
                     'Reboot the system in the “[output,url,_1,Graceful Server Reboot,_2,_3]” area.  Alternatively, [asis,SSH] into this server and run ‘[_4]’, then manually restart each of the listed processes.',
                     $self->base_path('scripts/dialog?dialog=reboot'),
                     'target',
                     '_blank',
                     $exec,
-                ],
+                ),
             );
         }
         elsif ( $proc->CHILD_ERROR() ) {
             $self->add_warn_advice(
                 'key' => 'Processes_error_while_checking_running_executables_1',
-                text  => [ 'An error occurred while attempting to check whether running executables are up-to-date: [_1]', $proc->autopsy() ],
+                text  => $self->_lh->maketext( 'An error occurred while attempting to check whether running executables are up-to-date: [_1]', $proc->autopsy() ),
             );
         }
         elsif ( $proc->stderr() ) {
             $self->add_warn_advice(
                 'key' => 'Processes_error_while_checking_running_executables_2',
-                text  => [ 'An error occurred while attempting to check whether running executables are up-to-date: [_1]', $proc->stderr() ],
+                text  => $self->_lh->maketext( 'An error occurred while attempting to check whether running executables are up-to-date: [_1]', $proc->stderr() ),
             );
         }
         else {
             $self->add_good_advice(
                 key  => 'Processes_none_with_outdated_executables',
-                text => ['No processes with outdated binaries detected.']
+                text => $self->_lh->maketext('No processes with outdated binaries detected.')
             );
         }
     }

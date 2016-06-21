@@ -28,6 +28,7 @@ package Cpanel::Security::Advisor::Assessors::Trojans;
 
 use strict;
 use Cpanel::SafeFind ();
+
 use base 'Cpanel::Security::Advisor::Assessors';
 use Cpanel::SafeRun::Simple;
 use Digest::SHA;
@@ -80,16 +81,16 @@ sub _check_for_libkeyutils {
 
                     if ( $res =~ m/file.*is not owned by any package/ ) {
                         $self->add_bad_advice(
-                            'text' => [
+                            'text' => $self->_lh->maketext(
                                 "Libkeyutils check: “[_1]” is not owned by any system packages. This indicates a possible server compromise. (NOTE: Corrupted RPM databases can report this as a false positive).",
                                 $File::Find::name
-                            ],
-                            'suggestion' => [
+                            ),
+                            'suggestion' => $self->_lh->maketext(
                                 'Check the following to determine if this server is compromised "[output,url,_1,Determine your Systems Status,_2,_3]"',
                                 'https://documentation.cpanel.net/display/CKB/Determine+Your+System%27s+Status',
                                 'target',
                                 '_blank'
-                            ],
+                            ),
                         );
                     }
                 }
@@ -108,13 +109,13 @@ sub _check_for_UMBREON_rootkit {
     my $dir2   = '/usr/local/UMBREON';
     if ( -d $dir or -d $dir2 ) {
         $self->add_bad_advice(
-            'text'       => ["UMBREON rootkit check: Evidence of the UMBREON rootkit was found."],
-            'suggestion' => [
+            'text'       => $self->_lh->maketext("UMBREON rootkit check: Evidence of the UMBREON rootkit was found."),
+            'suggestion' => $self->_lh->maketext(
                 'Check the following to determine if this server is compromised "[output,url,_1,Determine your Systems Status,_2,_3]"',
                 'https://documentation.cpanel.net/display/CKB/Determine+Your+System%27s+Status',
                 'target',
                 '_blank'
-            ],
+            ),
         );
     }
 }
@@ -136,16 +137,16 @@ sub _check_for_NCOM_rootkit {
 
     if (@bad_libs) {
         $self->add_bad_advice(
-            'text' => [
+            'text' => $self->_lh->maketext(
                 "NCOM rootkit check: Evidence of the NCOM rootkit was found: [list_and,_1]",
                 \@bad_libs
-            ],
-            'suggestion' => [
+            ),
+            'suggestion' => $self->_lh->maketext(
                 'Check the following for more information "[output,url,_1,We Live Security More Information,_2,_3]"',
                 'https://documentation.cpanel.net/display/CKB/Determine+Your+System%27s+Status',
                 'target',
                 '_blank'
-            ],
+            ),
         );
     }
 }
@@ -156,13 +157,13 @@ sub _check_for_jynx2_rootkit {
     my @found_jynx2_files = grep { -e } map { "$dir/$_" } qw( 3.so 4.so );
     if ( scalar @found_jynx2_files > 0 ) {
         $self->add_bad_advice(
-            'text'       => ["Jynx 2 rootkit check: Evidence of the Jynx 2 rootkit was found."],
-            'suggestion' => [
+            'text'       => $self->_lh->maketext("Jynx 2 rootkit check: Evidence of the Jynx 2 rootkit was found."),
+            'suggestion' => $self->_lh->maketext(
                 'Check the following to determine if this server is compromised "[output,url,_1,Determine your Systems Status,_2,_3]"',
                 'https://documentation.cpanel.net/display/CKB/Determine+Your+System%27s+Status',
                 'target',
                 '_blank'
-            ],
+            ),
         );
     }
 }
@@ -209,13 +210,13 @@ sub _check_for_cdorked_A {
     }
     if ( $has_cdorked == 1 ) {
         $self->add_bad_advice(
-            'text'       => ["CDORKED rootkit check: Evidence of the CDORKED A rootkit was found."],
-            'suggestion' => [
+            'text'       => $self->_lh->maketext("CDORKED rootkit check: Evidence of the CDORKED A rootkit was found."),
+            'suggestion' => $self->_lh->maketext(
                 'Check the following for more information "[output,url,_1,We Live Security More Information,_2,_3]"',
                 'http://www.welivesecurity.com/wp-content/uploads/2014/03/operation_windigo.pdf',
                 'target',
                 '_blank'
-            ],
+            ),
         );
     }
 }
@@ -235,16 +236,16 @@ sub _check_for_cdorked_B {
 
     if ( $has_cdorked_b == 1 ) {
         $self->add_bad_advice(
-            'text' => [
+            'text' => $self->_lh->maketext(
                 "CDORKED rootkit check: The following [numerate,_1,file was,files were] found, indicating the possibility of the CDORKED B rootkit: [list_and,_1]",
                 \@cdorked_files
-            ],
-            'suggestion' => [
+            ),
+            'suggestion' => $self->_lh->maketext(
                 'Check the following for more information "[output,url,_1,We Live Security More Information,_2,_3]"',
                 'http://www.welivesecurity.com/2013/04/26/linuxcdorked-new-apache-backdoor-in-the-wild-serves-blackhole/',
                 'target',
                 '_blank'
-            ],
+            ),
         );
     }
 }
@@ -277,16 +278,16 @@ sub _check_for_libkeyutils_filenames {
 
     if (@bad_libs) {
         $self->add_bad_advice(
-            'text' => [
+            'text' => $self->_lh->maketext(
                 "Libkey rootkit check: The following system [numerate,library,libraries] were found which could indicate a root level compromise: [list_and,_1]",
                 \@bad_libs
-            ],
-            'suggestion' => [
+            ),
+            'suggestion' => $self->_lh->maketext(
                 'Check the following for more information "[output,url,_1,We Live Security More Information,_2,_3]"',
                 'http://www.welivesecurity.com/wp-content/uploads/2014/03/operation_windigo.pdf',
                 'target',
                 '_blank'
-            ],
+            ),
         );
     }
 }
@@ -358,13 +359,13 @@ sub _check_sha1_sigs_libkeyutils {
 
     if (@trojaned_lib) {
         $self->add_bad_advice(
-            'text'       => [ "Libkey rootkit check: The following suspicious [numerate,file,files] were found that match a specific SHA-1 checksum which could indicate a root level compromise: [list]", \@trojaned_lib ],
-            'suggestion' => [
+            'text'       => $self->_lh->maketext( "Libkey rootkit check: The following suspicious [numerate,file,files] were found that match a specific SHA-1 checksum which could indicate a root level compromise: [list]", \@trojaned_lib ),
+            'suggestion' => $self->_lh->maketext(
                 'Check the following for more information "[output,url,_1,We Live Security More Information,_2,_3]"',
                 'http://www.welivesecurity.com/2014/02/21/an-in-depth-analysis-of-linuxebury/',
                 'target',
                 '_blank'
-            ],
+            ),
         );
     }
 }
@@ -405,13 +406,13 @@ sub _check_sha1_sigs_httpd {
 
     if (@infected) {
         $self->add_bad_advice(
-            'text'       => [ "Trojan Apache check: Suspicious checksums/hashes were found that could indicate the existence of the CDORKED rootkit. [list_and,_1]", \@infected ],
-            'suggestion' => [
+            'text'       => $self->_lh->maketext( "Trojan Apache check: Suspicious checksums/hashes were found that could indicate the existence of the CDORKED rootkit. [list_and,_1]", \@infected ),
+            'suggestion' => $self->_lh->maketext(
                 'Check pages 67-68 from the following for more information "[output,url,_1,We Live Security More Information,_2,_3]"',
                 'http://www.welivesecurity.com/wp-content/uploads/2014/03/operation_windigo.pdf',
                 'target',
                 '_blank'
-            ],
+            ),
         );
     }
 }
@@ -433,16 +434,16 @@ sub _check_sha1_sigs_named {
 
     if ($infected) {
         $self->add_bad_advice(
-            'text' => [
+            'text' => $self->_lh->maketext(
                 "Trojan bind/named check: suspicious checksums/hashes were found [_1] that could indicate the existence of the CDORKED rootkit.",
                 $infected
-            ],
-            'suggestion' => [
+            ),
+            'suggestion' => $self->_lh->maketext(
                 'Check pages 67-68 from the following for more information "[output,url,_1,We Live Security More Information,_2,_3]"',
                 'http://www.welivesecurity.com/wp-content/uploads/2014/03/operation_windigo.pdf',
                 'target',
                 '_blank'
-            ],
+            ),
         );
     }
 }
@@ -464,16 +465,16 @@ sub _check_sha1_sigs_ssh {
 
     if ($infected) {
         $self->add_bad_advice(
-            'text' => [
+            'text' => $self->_lh->maketext(
                 "Trojan sshd binary check: suspicious checksums/hashes were found [_1] that could indicate the existence of the Ebury rootkit.",
                 $infected
-            ],
-            'suggestion' => [
+            ),
+            'suggestion' => $self->_lh->maketext(
                 'Check pages 67-68 from the following for more information "[output,url,_1,We Live Security More Information,_2,_3]"',
                 'http://www.welivesecurity.com/wp-content/uploads/2014/03/operation_windigo.pdf',
                 'target',
                 '_blank'
-            ],
+            ),
         );
     }
 }
@@ -494,16 +495,16 @@ sub _check_sha1_sigs_ssh_add {
 
     if ($infected) {
         $self->add_bad_advice(
-            'text' => [
+            'text' => $self->_lh->maketext(
                 "Trojan sshd binary check: suspicious checksums/hashes were found [_1] that could indicate the existence of the Ebury rootkit.",
                 $infected
-            ],
-            'suggestion' => [
+            ),
+            'suggestion' => $self->_lh->maketext(
                 'Check pages 67-68 from the following for more information "[output,url,_1,We Live Security More Information,_2,_3]"',
                 'http://www.welivesecurity.com/wp-content/uploads/2014/03/operation_windigo.pdf',
                 'target',
                 '_blank'
-            ],
+            ),
         );
     }
 }
@@ -527,16 +528,16 @@ sub _check_sha1_sigs_sshd {
 
     if ($infected) {
         $self->add_bad_advice(
-            'text' => [
+            'text' => $self->_lh->maketext(
                 "Trojan sshd binary check: suspicious checksums/hashes were found [_1] that could indicate the existence of the Ebury rootkit.",
                 $infected
-            ],
-            'suggestion' => [
+            ),
+            'suggestion' => $self->_lh->maketext(
                 'Check pages 67-68 from the following for more information "[output,url,_1,We Live Security More Information,_2,_3]"',
                 'http://www.welivesecurity.com/wp-content/uploads/2014/03/operation_windigo.pdf',
                 'target',
                 '_blank'
-            ],
+            ),
         );
     }
 }
@@ -555,13 +556,13 @@ sub _check_for_ebury_ssh_G {
     my $ssh_G = Cpanel::SafeRun::Timed::timedsaferun( 0, $ssh, '-G' );
     if ( $ssh_G !~ /illegal|unknown/ ) {
         $self->add_bad_advice(
-            'text'       => ["Trojan sshd binary check: ssh -G failed to return illegal/unknown indicating the possibility of the Ebury rootkit."],
-            'suggestion' => [
+            'text'       => $self->_lh->maketext("Trojan sshd binary check: ssh -G failed to return illegal/unknown indicating the possibility of the Ebury rootkit."),
+            'suggestion' => $self->_lh->maketext(
                 'Check page 57 from the following for more information "[output,url,_1,We Live Security More Information,_2,_3]"',
                 'http://www.welivesecurity.com/wp-content/uploads/2014/03/operation_windigo.pdf',
                 'target',
                 '_blank'
-            ],
+            ),
         );
     }
 }
@@ -593,13 +594,13 @@ sub _check_for_ebury_ssh_banner {
 
     if ( $ssh_banner =~ m{ \A SSH-2\.0-[0-9a-f]{22,46} }xms ) {
         $self->add_bad_advice(
-            'text'       => ["Trojan sshd binary check: The sshd banner matches known signatures from Ebury machines, indicating the existence of the Ebury rootkit."],
-            'suggestion' => [
+            'text'       => $self->_lh->maketext("Trojan sshd binary check: The sshd banner matches known signatures from Ebury machines, indicating the existence of the Ebury rootkit."),
+            'suggestion' => $self->_lh->maketext(
                 'Check the following for more information "[output,url,_1,We Live Security More Information,_2,_3]"',
                 'http://www.welivesecurity.com/2014/02/21/an-in-depth-analysis-of-linuxebury/',
                 'target',
                 '_blank'
-            ],
+            ),
         );
     }
 }
@@ -617,13 +618,13 @@ sub _check_for_ebury_ssh_shmem {
         if (   $PROCESS_REF->{$cpid}{CMD}
             && $PROCESS_REF->{$cpid}{CMD} =~ m{ \A /usr/sbin/sshd \b }x ) {
             $self->add_bad_advice(
-                'text'       => ["sshd shared memory check: A shared memory segment created by sshd process exists."],
-                'suggestion' => [
+                'text'       => $self->_lh->maketext("sshd shared memory check: A shared memory segment created by sshd process exists."),
+                'suggestion' => $self->_lh->maketext(
                     'Check pages 33-34 from the following for more information "[output,url,_1,We Live Security More Information,_2,_3]"',
                     'http://www.welivesecurity.com/wp-content/uploads/2014/03/operation_windigo.pdf',
                     'target',
                     '_blank'
-                ],
+                ),
             );
         }
     }

@@ -29,6 +29,7 @@ package Cpanel::Security::Advisor::Assessors::EntropyChat;
 use strict;
 use warnings;
 use Cpanel::RestartSrv();
+
 use base 'Cpanel::Security::Advisor::Assessors';
 
 sub generate_advice {
@@ -48,13 +49,13 @@ sub _check_entropy_chat_enabled {
             {
                 'key'        => 'EntropyChat_is_running',
                 'type'       => $Cpanel::Security::Advisor::ADVISE_BAD,
-                'text'       => ['Entropy Chat is running.'],
-                'suggestion' => [
+                'text'       => $self->_lh->maketext('Entropy Chat is running.'),
+                'suggestion' => $self->_lh->maketext(
                     'Turn off Entropy Chat in the “[output,url,_1,Service Manager,_2,_3]” page.',
                     $self->base_path('scripts/srvmng'),
                     'target',
                     '_blank'
-                ],
+                ),
             }
         );
     }
@@ -63,7 +64,7 @@ sub _check_entropy_chat_enabled {
             {
                 'key'  => 'EntropyChat_is_disabled',
                 'type' => $Cpanel::Security::Advisor::ADVISE_GOOD,
-                'text' => ['Entropy Chat is disabled.'],
+                'text' => $self->_lh->maketext('Entropy Chat is disabled.'),
             }
         );
 

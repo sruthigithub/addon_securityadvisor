@@ -163,4 +163,9 @@ sub get_running_kernel_type {
     return $kernel_type;
 }
 
+sub _lh {
+    my ($self) = @_;
+    return $self->{'security_advisor_obj'}{'locale'};
+}
+
 1;
