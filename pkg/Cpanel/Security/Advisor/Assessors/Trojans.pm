@@ -279,7 +279,8 @@ sub _check_for_libkeyutils_filenames {
     if (@bad_libs) {
         $self->add_bad_advice(
             'text' => $self->_lh->maketext(
-                "Libkey rootkit check: The following system [numerate,library,libraries] were found which could indicate a root level compromise: [list_and,_1]",
+                "Libkey rootkit check: The following system [numerate,_1,library,libraries] were found which could indicate a root level compromise: [list_and,_2]",
+                scalar @bad_libs,
                 \@bad_libs
             ),
             'suggestion' => $self->_lh->maketext(
@@ -359,7 +360,7 @@ sub _check_sha1_sigs_libkeyutils {
 
     if (@trojaned_lib) {
         $self->add_bad_advice(
-            'text'       => $self->_lh->maketext( "Libkey rootkit check: The following suspicious [numerate,file,files] were found that match a specific SHA-1 checksum which could indicate a root level compromise: [list]", \@trojaned_lib ),
+            'text'       => $self->_lh->maketext( "Libkey rootkit check: The following suspicious [numerate,_1,file,files] were found that match a specific SHA-1 checksum which could indicate a root level compromise: [list_and,_2]", scalar @trojaned_lib, \@trojaned_lib ),
             'suggestion' => $self->_lh->maketext(
                 'Check the following for more information "[output,url,_1,We Live Security More Information,_2,_3]"',
                 'http://www.welivesecurity.com/2014/02/21/an-in-depth-analysis-of-linuxebury/',

@@ -117,7 +117,7 @@ sub _check_for_ssh_version {
         else {
             $self->add_good_advice(
                 'key'  => 'SSH_is_current',
-                'text' => $self->_lh->maketext( 'Current SSH version is up to date: ' . $current_sshversion )
+                'text' => $self->_lh->maketext( 'Current SSH version is up to date: [_1]', $current_sshversion )
             );
         }
     }

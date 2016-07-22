@@ -59,15 +59,15 @@ sub _check_for_unsafe_permissions {
             my $expected_mode = join( ' ', map { sprintf( '%04o', $_ ) } @{ $expected_attributes->{'perms'} } );
             my $actual_mode = sprintf( "%04o", $current_mode & 07777 );
             $self->add_warn_advice(
-                'text'       => $self->_lh->maketext("$file has non default permissions.  Expected: $expected_mode, Actual: $actual_mode."),
-                'suggestion' => $self->_lh->maketext("Review the permissions on $file to ensure they are safe")
+                'text'       => $self->_lh->maketext( "[_1] has non default permissions.  Expected: [_2], Actual: [_3].", $file, $expected_mode, $actual_mode ),
+                'suggestion' => $self->_lh->maketext( "Review the permissions on [_1] to ensure they are safe",           $file ),
             );
         }
 
         if ( $uid != $expected_attributes->{'uid'} or $gid != $expected_attributes->{'gid'} ) {
             $self->add_warn_advice(
-                'text'       => $self->_lh->maketext("$file has non root user and/or group"),
-                'suggestion' => $self->_lh->maketext("Review the ownership permissions on $file")
+                'text'       => $self->_lh->maketext( "[_1] has non root user and/or group",      $file ),
+                'suggestion' => $self->_lh->maketext( "Review the ownership permissions on [_1]", $file ),
             );
         }
     }

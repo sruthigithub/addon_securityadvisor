@@ -86,11 +86,7 @@ sub _check_for_db_test {
         $self->add_bad_advice(
             'key'        => 'Mysql_test_database_exists',
             'text'       => $self->_lh->maketext("MySQL test database exists."),
-            'suggestion' => $self->_lh->maketext(
-                q{MySQL test database is used by numerous attacks and should be removed.
-				> mysql -e 'drop database test'
-			}
-            )
+            'suggestion' => $self->_lh->maketext(q{MySQL test database is used by numerous attacks and should be removed by running “mysql -e 'drop database test'”.}),
         );
 
     }
@@ -183,7 +179,7 @@ sub _check_for_public_bind_address {
         else {
             $self->add_bad_advice(
                 'key'        => 'Mysql_listening_on_public_address',
-                'text'       => $self->_lh->maketext("The MySQL service is currently configured to listen on a public address: (bind-address=$bind_address)"),
+                'text'       => $self->_lh->maketext( "The MySQL service is currently configured to listen on a public address: (bind-address=[_1])", $bind_address ),
                 'suggestion' => $self->_lh->maketext(
                     'Configure bind-address=127.0.0.1 in /etc/my.cnf, or close port [_1] in the server’s firewall.',
                     $port
