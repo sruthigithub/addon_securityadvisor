@@ -89,7 +89,7 @@ sub _check_for_apache_chroot {
                     'Enable “Jail Apache” in the “[output,url,_1,Tweak Settings,_4,_5]” area, and change users to jailshell in the “[output,url,_2,Manage Shell Access,_4,_5]” area.  Consider a more robust solution by using “[output,url,_3,CageFS on CloudLinux,_4,_5]”',
                     $self->base_path('scripts2/tweaksettings?find=jailapache'),
                     $self->base_path('scripts2/manageshells'),
-                    'http://cpanel.net/cpanel-whm/cloudlinux/',
+                    'https://go.cpanel.net/cloudlinux',
                     'target',
                     '_blank'
                 ),
@@ -206,7 +206,7 @@ sub _centos_symlink_protection {
                     'text'       => $self->_lh->maketext('Apache Symlink Protection: mod_ruid2 loaded in Apache'),
                     'suggestion' => $self->_lh->maketext(
                         "mod_ruid2 is enabled in Apache. To ensure that this aids in protecting from symlink attacks, Jailed Apache needs to be enabled. If this not set properly, you should see an indication in Security Advisor (this page) in the sections for “Apache vhosts are not segmented or chroot()ed” and “Users running outside of the jail”. If those are not present, your users should be properly jailed. Review [output,url,_1,Symlink Race Condition Protection,_2,_3] for further information.",
-                        'http://docs.cpanel.net/twiki/bin/view/EasyApache/Apache/SymlinkPatch',
+                        'https://go.cpanel.net/SymlinkPatch',
                         'target',
                         '_blank'
                     ),
@@ -222,7 +222,7 @@ sub _centos_symlink_protection {
                 'text'       => $self->_lh->maketext('Apache Symlink Protection: the Bluehost provided Apache patch is in effect'),
                 'suggestion' => $self->_lh->maketext(
                     "It appears that the Bluehost provided Apache patch is being used to provide symlink protection. This is less than optimal. Please review [output,url,_1,Symlink Race Condition Protection,_2,_3].",
-                    'http://docs.cpanel.net/twiki/bin/view/EasyApache/Apache/SymlinkPatch',
+                    'https://go.cpanel.net/SymlinkPatch',
                     'target',
                     '_blank'
                 ),
@@ -237,7 +237,7 @@ sub _centos_symlink_protection {
                 'text'       => $self->_lh->maketext('Apache Symlink Protection: the Rack911 provided Apache patch is in effect'),
                 'suggestion' => $self->_lh->maketext(
                     "It appears that the Rack911 provided Apache patch is being used to provide symlink protection. This is less than optimal. Please review [output,url,_1,Symlink Race Condition Protection,_2,_3].",
-                    'http://docs.cpanel.net/twiki/bin/view/EasyApache/Apache/SymlinkPatch',
+                    'https://go.cpanel.net/SymlinkPatch',
                     'target',
                     '_blank',
                 ),
@@ -252,7 +252,7 @@ sub _centos_symlink_protection {
                 'text'       => $self->_lh->maketext('No symlink protection detected'),
                 'suggestion' => $self->_lh->maketext(
                     'You do not appear to have any symlink protection enabled on this server. You can protect against this in multiple ways. Please review the following [output,url,_1,documentation,_2,_3] to find a solution that is suited to your needs.',
-                    'http://docs.cpanel.net/twiki/bin/view/EasyApache/Apache/SymlinkPatch',
+                    'https://go.cpanel.net/SymlinkPatch',
                     'target',
                     '_blank'
                 ),
@@ -296,7 +296,7 @@ sub _cloudlinux_symlink_protection {
                         'http://docs.cloudlinux.com/index.html?cagefs.html',
                         'target',
                         '_blank',
-                        'http://docs.cpanel.net/twiki/bin/view/EasyApache/Apache/SymlinkPatch',
+                        'https://go.cpanel.net/SymlinkPatch',
                         "$uncaged_user_count"
                     ),
                 }
@@ -370,7 +370,7 @@ sub _cloudlinux_symlink_protection {
                     'http://docs.cloudlinux.com/index.html?cagefs.html',
                     'target',
                     '_blank',
-                    'http://docs.cpanel.net/twiki/bin/view/EasyApache/Apache/SymlinkPatch'
+                    'https://go.cpanel.net/SymlinkPatch'
                 ),
             }
         );

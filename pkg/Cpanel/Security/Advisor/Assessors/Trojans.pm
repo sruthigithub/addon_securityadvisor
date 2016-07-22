@@ -87,7 +87,7 @@ sub _check_for_libkeyutils {
                             ),
                             'suggestion' => $self->_lh->maketext(
                                 'Check the following to determine if this server is compromised "[output,url,_1,Determine your Systems Status,_2,_3]"',
-                                'https://documentation.cpanel.net/display/CKB/Determine+Your+System%27s+Status',
+                                'https://go.cpanel.net/CompSystem',
                                 'target',
                                 '_blank'
                             ),
@@ -112,7 +112,7 @@ sub _check_for_UMBREON_rootkit {
             'text'       => $self->_lh->maketext("UMBREON rootkit check: Evidence of the UMBREON rootkit was found."),
             'suggestion' => $self->_lh->maketext(
                 'Check the following to determine if this server is compromised "[output,url,_1,Determine your Systems Status,_2,_3]"',
-                'https://documentation.cpanel.net/display/CKB/Determine+Your+System%27s+Status',
+                'https://go.cpanel.net/CompSystem',
                 'target',
                 '_blank'
             ),
@@ -143,7 +143,7 @@ sub _check_for_NCOM_rootkit {
             ),
             'suggestion' => $self->_lh->maketext(
                 'Check the following for more information "[output,url,_1,We Live Security More Information,_2,_3]"',
-                'https://documentation.cpanel.net/display/CKB/Determine+Your+System%27s+Status',
+                'https://go.cpanel.net/CompSystem',
                 'target',
                 '_blank'
             ),
@@ -160,7 +160,7 @@ sub _check_for_jynx2_rootkit {
             'text'       => $self->_lh->maketext("Jynx 2 rootkit check: Evidence of the Jynx 2 rootkit was found."),
             'suggestion' => $self->_lh->maketext(
                 'Check the following to determine if this server is compromised "[output,url,_1,Determine your Systems Status,_2,_3]"',
-                'https://documentation.cpanel.net/display/CKB/Determine+Your+System%27s+Status',
+                'https://go.cpanel.net/CompSystem',
                 'target',
                 '_blank'
             ),
