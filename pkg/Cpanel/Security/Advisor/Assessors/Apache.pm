@@ -28,7 +28,6 @@ package Cpanel::Security::Advisor::Assessors::Apache;
 
 use strict;
 use base 'Cpanel::Security::Advisor::Assessors';
-use Cpanel::Version            ();
 use Cpanel::Config::Sources    ();
 use Cpanel::HttpRequest        ();
 use Cpanel::HttpUtils::Version ();
@@ -87,12 +86,7 @@ sub _check_for_apache_chroot {
                 'type'       => $Cpanel::Security::Advisor::ADVISE_BAD,
                 'text'       => ['Apache vhosts are not segmented or chroot()ed.'],
                 'suggestion' => [
-                    (
-                        $Cpanel::Version::MAJORVERSION > 11.37
-                        ? 'Enable “Jail Apache” in the “[output,url,_1,Tweak Settings,_4,_5]” area, and change users to jailshell in the “[output,url,_2,Manage Shell Access,_4,_5]” area.  Consider a more robust solution by using “[output,url,_3,CageFS on CloudLinux,_4,_5]”'
-                        : 'Upgrade to cPanel 11.38 or later, then enable “Jail Apache” in the “[output,url,_1,Tweak Settings,_4,_5]” area, and change users to jailshell in the “[output,url,_2,Manage Shell Access,_4,_5]” area.  Consider a more robust solution by using “[output,url,_3,CageFS on CloudLinux,_4,_5]”'
-
-                    ),
+                    'Enable “Jail Apache” in the “[output,url,_1,Tweak Settings,_4,_5]” area, and change users to jailshell in the “[output,url,_2,Manage Shell Access,_4,_5]” area.  Consider a more robust solution by using “[output,url,_3,CageFS on CloudLinux,_4,_5]”',
                     $self->base_path('scripts2/tweaksettings?find=jailapache'),
                     $self->base_path('scripts2/manageshells'),
                     'http://cpanel.net/cpanel-whm/cloudlinux/',

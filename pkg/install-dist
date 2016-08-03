@@ -26,22 +26,11 @@
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 use Cwd                      ();
-use Cpanel::Version          ();
 use Cpanel::SafeFind         ();
 use Cpanel::LoadFile         ();
 use Cpanel::FileUtils::Write ();
 
-if ( $Cpanel::Version::MAJORVERSION < 11.34 ) {
-    #
-    #  Note: probably works fine on 11.34+ but untested
-    #  and its going to advise you to enable security features
-    #  that are not available on older versions.  We could
-    #  add versioning in the future
-    #
-    print "This addon requires 11.34 or later.\n";
-    exit(1);
-}
-elsif ( !-e '/var/cpanel/dev_sandbox' ) {
+if ( !-e '/var/cpanel/dev_sandbox' ) {
     print "This installer script is only intended to run on internal cPanel systems.\n";
     print "Please use the standard install script (install) instead of $0\n";
     exit(1);
