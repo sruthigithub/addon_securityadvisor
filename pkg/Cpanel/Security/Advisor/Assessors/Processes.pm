@@ -83,13 +83,13 @@ sub _check_for_outdated_processes {
         elsif ( $proc->CHILD_ERROR() ) {
             $self->add_warn_advice(
                 'key' => 'Processes_error_while_checking_running_executables_1',
-                text => [ 'An error occurred while attempting to check whether running executables are up-to-date: [_1]', $proc->autopsy() ],
+                text  => [ 'An error occurred while attempting to check whether running executables are up-to-date: [_1]', $proc->autopsy() ],
             );
         }
         elsif ( $proc->stderr() ) {
             $self->add_warn_advice(
                 'key' => 'Processes_error_while_checking_running_executables_2',
-                text => [ 'An error occurred while attempting to check whether running executables are up-to-date: [_1]', $proc->stderr() ],
+                text  => [ 'An error occurred while attempting to check whether running executables are up-to-date: [_1]', $proc->stderr() ],
             );
         }
         else {

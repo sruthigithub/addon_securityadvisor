@@ -358,7 +358,7 @@ sub _check_sha1_sigs_libkeyutils {
 
     if (@trojaned_lib) {
         $self->add_bad_advice(
-            'text' => [ "Libkey rootkit check: The following suspicious [numerate,file,files] were found that match a specific SHA-1 checksum which could indicate a root level compromise: [list]", \@trojaned_lib ],
+            'text'       => [ "Libkey rootkit check: The following suspicious [numerate,file,files] were found that match a specific SHA-1 checksum which could indicate a root level compromise: [list]", \@trojaned_lib ],
             'suggestion' => [
                 'Check the following for more information "[output,url,_1,We Live Security More Information,_2,_3]"',
                 'http://www.welivesecurity.com/2014/02/21/an-in-depth-analysis-of-linuxebury/',
@@ -405,7 +405,7 @@ sub _check_sha1_sigs_httpd {
 
     if (@infected) {
         $self->add_bad_advice(
-            'text' => [ "Trojan Apache check: Suspicious checksums/hashes were found that could indicate the existence of the CDORKED rootkit. [list_and,_1]", \@infected ],
+            'text'       => [ "Trojan Apache check: Suspicious checksums/hashes were found that could indicate the existence of the CDORKED rootkit. [list_and,_1]", \@infected ],
             'suggestion' => [
                 'Check pages 67-68 from the following for more information "[output,url,_1,We Live Security More Information,_2,_3]"',
                 'http://www.welivesecurity.com/wp-content/uploads/2014/03/operation_windigo.pdf',

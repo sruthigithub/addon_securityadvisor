@@ -62,7 +62,7 @@ sub _check_for_kernel_version {
 
     if ( $running_kernelversion =~ m/\.(?:noarch|x86_64|i.86).+$/ ) {
         $self->add_info_advice(
-            'key' => 'Kernel_can_not_check',
+            'key'  => 'Kernel_can_not_check',
             'text' => [ 'Custom kernel version cannot be checked to see if it is up to date: [_1]', $running_kernelversion ]
         );
     }
@@ -129,7 +129,7 @@ sub _check_for_kernel_version {
     }
     else {
         $self->add_good_advice(
-            'key' => 'Kernel_running_is_current',
+            'key'  => 'Kernel_running_is_current',
             'text' => [ 'Current running kernel version is up to date: [_1]', $running_kernelversion ]
         );
     }
