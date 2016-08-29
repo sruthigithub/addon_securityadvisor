@@ -28,11 +28,12 @@ OR
 
 Accessing the Security Advisor begins the analysis of your system.
 
+## Contributing
+
+Contributions are welcome. 
+
+Please carefully read the [Contribution Document](CONTRIBUTING.md) for workflow and contributing developer information.
+
 ## License
 
 See the LICENSE file in the project root directory.
-
-## Contributing
-
-Contributions are welcome. Please use contribute using [GitHub Flow](https://guides.github.com/introduction/flow/). Create a branch, add commits, and [open a pull request](https://github.com/cpanelinc/addon_securityadvisor/compare/).
-
