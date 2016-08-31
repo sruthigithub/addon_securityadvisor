@@ -29,6 +29,7 @@ package Cpanel::Security::Advisor::Assessors::Jail;
 use strict;
 use Cpanel::Config::LoadCpConf ();
 use Cpanel::PwCache            ();
+use Cpanel::PwCache::Build     ();
 use Cpanel::Config::Users      ();
 use base 'Cpanel::Security::Advisor::Assessors';
 
@@ -66,7 +67,7 @@ sub _check_for_unjailed_users {
         my %wheel_users_hash = map { $_ => 1 } split( ' ', ( getgrnam('wheel') )[3] );
         delete $wheel_users_hash{'root'};    # We don't care about root being in the wheel group
 
-        my $pwcache_ref = Cpanel::PwCache::fetch_pwcache();
+        my $pwcache_ref = Cpanel::PwCache::Build::fetch_pwcache();
         my @users = map { $_->[0] } grep { exists $cpusers{ $_->[0] } && $_->[8] && $_->[8] !~ m{(?:false|nologin|(?:no|jail)shell)} } @$pwcache_ref;    #aka users without jail or noshell
         my @users_without_jail;
         my @wheel_users;
