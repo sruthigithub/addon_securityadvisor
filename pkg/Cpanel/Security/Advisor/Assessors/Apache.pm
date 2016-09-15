@@ -1,6 +1,6 @@
 package Cpanel::Security::Advisor::Assessors::Apache;
 
-# Copyright (c) 2015, cPanel, Inc.
+# Copyright (c) 2016, cPanel, Inc.
 # All rights reserved.
 # http://cpanel.net
 #
@@ -35,6 +35,7 @@ use Cpanel::HttpUtils::Version ();
 use Cpanel::SafeRun::Errors    ();
 use Cpanel::Config::Httpd      ();
 use Cpanel::Validate::Username ();
+use Cpanel::GenSysInfo         ();
 
 sub version {
     return '1.03';
@@ -191,6 +192,7 @@ sub _centos_symlink_protection {
     my $bluehost             = grep { /SPT_DOCROOT/ } $httpd_binary;
     my $rack911              = grep { /UnhardenedSymLinks/ } $httpd_binary;
     my $jailedapache         = $security_advisor_obj->{'cpconf'}->{'jailapache'};
+    my $sysinfo              = Cpanel::GenSysInfo::run();
 
     if ($ruid) {
         if ($jailedapache) {
@@ -248,7 +250,7 @@ sub _centos_symlink_protection {
             }
         );
     }
-    if ( !($ruid) && !($rack911) && !($bluehost) ) {
+    if ( !($ruid) && !($rack911) && !($bluehost) && $sysinfo->{'rpm_dist_ver'} != 6 ) {    # if CentOS 6 is detected, defer to the Assessors::Symlinks
         $security_advisor_obj->add_advice(
             {
                 'key'        => 'Apache_no_symlink_protection',
