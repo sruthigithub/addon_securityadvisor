@@ -66,7 +66,7 @@ system $git_bin, 'rm', '-rf', '/usr/local/cpanel/whostmgr/docroot/cgi/securityad
 # Remove old icon
 system $git_bin, 'rm', '-rf', '/usr/local/cpanel/whostmgr/docroot/themes/x/icons/ico-security-advisor.png';
 
-chdir($pwd) or die "Could not return to original directory: $cwd: $!";
+chdir($pwd) or die "Could not return to original directory: $pwd: $!";
 
 # Install the new version
 system '/usr/bin/rsync', '-rlptD', 'templates/', '/usr/local/cpanel/whostmgr/docroot/templates/securityadvisor/';
@@ -105,7 +105,7 @@ system $git_bin, "add", "Cpanel/Security/Advisor", "Cpanel/Security/Advisor.pm",
 
 #system $git_bin, "commit", "-m", "Update cPanel Security Advisor\ncase XXXXX: Update cPanel Security Advisor\n";
 
-chdir($pwd) or die "Could not return to original directory: $cwd: $!";
+chdir($pwd) or die "Could not return to original directory: $pwd: $!";
 
 print "cPanel Security Advisor installed into WHM (distro mode).\n";
 
