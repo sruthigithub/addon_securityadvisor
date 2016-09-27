@@ -1,6 +1,6 @@
 package Cpanel::Security::Advisor::Assessors::Tomcat;
 
-# Copyright (c) 2013, cPanel, Inc.
+# Copyright (c) 2016, cPanel, Inc.
 # All rights reserved.
 # http://cpanel.net
 #
@@ -43,6 +43,7 @@ sub _is_tomcat5_installed {
     if ( -l '/usr/local/jakarta/tomcat' ) {
         $security_advisor_obj->add_advice(
             {
+                'key'        => q{Tomcat_installed_5_5_version_is_EOL},
                 'type'       => $Cpanel::Security::Advisor::ADVISE_BAD,
                 'text'       => $self->_lh->maketext('Tomcat 5.5 is installed, but is EOL.'),
                 'suggestion' => $self->_lh->maketext(

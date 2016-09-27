@@ -1,6 +1,6 @@
 package Cpanel::Security::Advisor::Assessors::Permissions;
 
-# Copyright (c) 2013, cPanel, Inc.
+# Copyright (c) 2016, cPanel, Inc.
 # All rights reserved.
 # http://cpanel.net
 #
@@ -59,14 +59,16 @@ sub _check_for_unsafe_permissions {
             my $expected_mode = join( ' ', map { sprintf( '%04o', $_ ) } @{ $expected_attributes->{'perms'} } );
             my $actual_mode = sprintf( "%04o", $current_mode & 07777 );
             $self->add_warn_advice(
-                'text'       => $self->_lh->maketext( "[_1] has non default permissions.  Expected: [_2], Actual: [_3].", $file, $expected_mode, $actual_mode ),
-                'suggestion' => $self->_lh->maketext( "Review the permissions on [_1] to ensure they are safe",           $file ),
+                'key'  => q{Permissions_are_non_default},
+                'text' => $self->_lh->maketext( "[_1] has non default permissions.  Expected: [_2], Actual: [_3].", $file, $expected_mode, $actual_mode ),
+                'suggestion' => $self->_lh->maketext( "Review the permissions on [_1] to ensure they are safe", $file ),
             );
         }
 
         if ( $uid != $expected_attributes->{'uid'} or $gid != $expected_attributes->{'gid'} ) {
             $self->add_warn_advice(
-                'text'       => $self->_lh->maketext( "[_1] has non root user and/or group",      $file ),
+                'key'        => q{Permissions_has_non_root_users},
+                'text'       => $self->_lh->maketext( "[_1] has non root user and/or group", $file ),
                 'suggestion' => $self->_lh->maketext( "Review the ownership permissions on [_1]", $file ),
             );
         }
