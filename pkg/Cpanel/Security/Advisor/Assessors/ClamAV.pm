@@ -30,6 +30,7 @@ use strict;
 use warnings;
 use Cpanel::FindBin         ();
 use Cpanel::SafeRun::Errors ();
+
 use base 'Cpanel::Security::Advisor::Assessors';
 
 sub generate_advice {
@@ -52,11 +53,11 @@ sub _check_clamav {
             {
                 'key'        => 'ClamAV_not_installed',
                 'type'       => $Cpanel::Security::Advisor::ADVISE_BAD,
-                'text'       => ['ClamAV is not installed.'],
-                'suggestion' => [
+                'text'       => $self->_lh->maketext('ClamAV is not installed.'),
+                'suggestion' => $self->_lh->maketext(
                     'Install ClamAV within "[output,url,_1,Manage Plugins,_2,_3]".',
                     $self->base_path('scripts2/getthemes?modules=1'), 'target', '_blank',
-                ],
+                ),
             }
         );
     }
@@ -65,11 +66,11 @@ sub _check_clamav {
             {
                 'key'        => 'ClamAV_binary_not_installed',
                 'type'       => $Cpanel::Security::Advisor::ADVISE_BAD,
-                'text'       => [q{ClamAV clamscan binary is not installed.}],
-                'suggestion' => [
+                'text'       => $self->_lh->maketext('ClamAV clamscan binary is not installed.'),
+                'suggestion' => $self->_lh->maketext(
                     'Install ClamAV within "[output,url,_1,Manage Plugins,_2,_3]".',
                     $self->base_path('scripts2/getthemes?modules=1'), 'target', '_blank',
-                ],
+                ),
             }
         );
     }
@@ -78,11 +79,11 @@ sub _check_clamav {
             {
                 'key'        => 'ClamAV_freshclam_not_installed',
                 'type'       => $Cpanel::Security::Advisor::ADVISE_BAD,
-                'text'       => [q{ClamAV freshclam binary is not installed.}],
-                'suggestion' => [
+                'text'       => $self->_lh->maketext('ClamAV freshclam binary is not installed.'),
+                'suggestion' => $self->_lh->maketext(
                     'Install ClamAV within "[output,url,_1,Manage Plugins,_2,_3]".',
                     $self->base_path('scripts2/getthemes?modules=1'), 'target', '_blank',
-                ],
+                ),
             }
         );
     }
@@ -93,11 +94,11 @@ sub _check_clamav {
                 {
                     'key'        => 'ClamAV_freshclam_and_clamscan_binaries_different_versions',
                     'type'       => $Cpanel::Security::Advisor::ADVISE_WARN,
-                    'text'       => [q{ClamAV freshclam and clamscan binaries are different versions.}],
-                    'suggestion' => [
+                    'text'       => $self->_lh->maketext('ClamAV freshclam and clamscan binaries are different versions.'),
+                    'suggestion' => $self->_lh->maketext(
                         'Install ClamAV within "[output,url,_1,Manage Plugins,_2,_3]".',
                         $self->base_path('scripts2/getthemes?modules=1'), 'target', '_blank',
-                    ],
+                    ),
                 }
             );
         }

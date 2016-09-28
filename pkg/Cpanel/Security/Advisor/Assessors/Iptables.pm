@@ -52,8 +52,8 @@ sub _is_iptables_active {
                 {
                     'key'        => 'Iptables_firewall_not_running',
                     'type'       => $Cpanel::Security::Advisor::ADVISE_BAD,
-                    'text'       => ['Firewall is not running'],
-                    'suggestion' => ['This might be a simple matter of executing "/etc/init.d/iptables start"'],
+                    'text'       => $self->_lh->maketext('Firewall is not running'),
+                    'suggestion' => $self->_lh->maketext('This might be a simple matter of executing "/etc/init.d/iptables start"'),
                 },
             );
         }

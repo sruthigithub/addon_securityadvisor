@@ -27,8 +27,8 @@ package Cpanel::Security::Advisor::Assessors::Spam;
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 use strict;
-use Cpanel::Version  ();
 use Cpanel::LoadFile ();
+
 use base 'Cpanel::Security::Advisor::Assessors';
 
 sub generate_advice {
@@ -48,7 +48,7 @@ sub _check_for_nobody_tracking {
             {
                 'key'  => 'Spam_user_nobody_can_not_permitted_to_send_email',
                 'type' => $Cpanel::Security::Advisor::ADVISE_GOOD,
-                'text' => ['The pseudo-user “nobody” is not permitted to send email.'],
+                'text' => $self->_lh->maketext('The pseudo-user “nobody” is not permitted to send email.'),
             }
         );
     }
@@ -57,13 +57,13 @@ sub _check_for_nobody_tracking {
             {
                 'key'        => 'Spam_user_nobody_can_send_email',
                 'type'       => $Cpanel::Security::Advisor::ADVISE_BAD,
-                'text'       => ['The pseudo-user “nobody” is permitted to send email.'],
-                'suggestion' => [
+                'text'       => $self->_lh->maketext('The pseudo-user “nobody” is permitted to send email.'),
+                'suggestion' => $self->_lh->maketext(
                     'Enable “Prevent "nobody" from sending mail” in the “[output,url,_1,Tweak Settings,_2,_3]” area',
                     $self->base_path('scripts2/tweaksettings?find=nobodyspam'),
                     'target',
                     '_blank'
-                ],
+                ),
             }
         );
     }
@@ -73,7 +73,7 @@ sub _check_for_nobody_tracking {
             {
                 'key'  => 'Spam_outbound_smtp_restricted',
                 'type' => $Cpanel::Security::Advisor::ADVISE_GOOD,
-                'text' => ['Outbound SMTP connections are restricted.'],
+                'text' => $self->_lh->maketext('Outbound SMTP connections are restricted.'),
             }
         );
 
@@ -83,7 +83,7 @@ sub _check_for_nobody_tracking {
             {
                 'key'  => 'Spam_smtp_block_enabled',
                 'type' => $Cpanel::Security::Advisor::ADVISE_GOOD,
-                'text' => ['CSF has SMTP_BLOCK enabled.'],
+                'text' => $self->_lh->maketext('CSF has SMTP_BLOCK enabled.'),
             }
         );
 
@@ -93,13 +93,13 @@ sub _check_for_nobody_tracking {
             {
                 'key'        => 'Spam_smtp_unrestricted',
                 'type'       => $Cpanel::Security::Advisor::ADVISE_BAD,
-                'text'       => ['Outbound SMTP connections are unrestricted.'],
-                'suggestion' => [
+                'text'       => $self->_lh->maketext('Outbound SMTP connections are unrestricted.'),
+                'suggestion' => $self->_lh->maketext(
                     'Enable SMTP Restrictions in the “[output,url,_1,SMTP Restrictions,_2,_3]” area',
                     $self->base_path('scripts2/smtpmailgidonly'),
                     'target',
                     '_blank'
-                ],
+                ),
 
             }
         );
@@ -110,7 +110,7 @@ sub _check_for_nobody_tracking {
             {
                 'key'  => 'Spam_apache_queried_for_sender',
                 'type' => $Cpanel::Security::Advisor::ADVISE_GOOD,
-                'text' => ['Apache is being queried to determine the actual sender when mail originates from the “nobody” pseudo-user.'],
+                'text' => $self->_lh->maketext('Apache is being queried to determine the actual sender when mail originates from the “nobody” pseudo-user.'),
             }
         );
     }
@@ -119,18 +119,13 @@ sub _check_for_nobody_tracking {
             {
                 'key'        => 'Spam_apache_not_queried_for_sender',
                 'type'       => $Cpanel::Security::Advisor::ADVISE_BAD,
-                'text'       => ['Apache is not being queried to determine the actual sender when mail originates from the “nobody” pseudo-user.'],
-                'suggestion' => [
-                    (
-                        $Cpanel::Version::MAJORVERSION > 11.35
-                        ? 'Enable “Query Apache server status to determine the sender of email sent from processes running as nobody” in the “[output,url,_1,Exim Configuration Manager,_2,_3]” area\'s “Basic Editor”'
-                        : 'Upgrade to cPanel 11.36 or later, then enable “Query Apache server status to determine the sender of email sent from processes running as nobody” in the “[output,url,_1,Exim Configuration Manager,_2,_3]” area\'s “Basic Editor”'
-
-                    ),
+                'text'       => $self->_lh->maketext('Apache is not being queried to determine the actual sender when mail originates from the “nobody” pseudo-user.'),
+                'suggestion' => $self->_lh->maketext(
+                    'Enable “Query Apache server status to determine the sender of email sent from processes running as nobody” in the “[output,url,_1,Exim Configuration Manager,_2,_3]” area\'s “Basic Editor”',
                     $self->base_path('scripts2/displayeximconfforedit'),
                     'target',
                     '_blank'
-                ],
+                ),
             }
         );
 

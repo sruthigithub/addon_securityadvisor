@@ -86,7 +86,7 @@ sub _check_scgiwrap {
             {
                 'key'  => 'Scgiwrap_SCGI_is_disabled',
                 'type' => $Cpanel::Security::Advisor::ADVISE_GOOD,
-                'text' => ['SCGI is disabled, currently using the recommended suEXEC.'],
+                'text' => $self->_lh->maketext('SCGI is disabled, currently using the recommended suEXEC.'),
             }
         );
     }
@@ -96,13 +96,13 @@ sub _check_scgiwrap {
                 {
                     'key'        => 'Scgiwrap_SCGI_AND_suEXEC_are_enabled',
                     'type'       => $Cpanel::Security::Advisor::ADVISE_BAD,
-                    'text'       => ['Both SCGI and suEXEC are enabled.'],
-                    'suggestion' => [
+                    'text'       => $self->_lh->maketext('Both SCGI and suEXEC are enabled.'),
+                    'suggestion' => $self->_lh->maketext(
                         'On the “[output,url,_1,Configure PHP and suEXEC,_2,_3]” page toggle “Apache suEXEC” off then back on to disable SCGI.',
                         $self->base_path('scripts2/phpandsuexecconf'),
                         'target',
                         '_blank'
-                    ],
+                    ),
                 }
             );
         }
@@ -111,7 +111,7 @@ sub _check_scgiwrap {
                 {
                     'key'  => 'Scgiwrap_SCGI_suEXEC_and_mod_ruid2_are_enabled',
                     'type' => $Cpanel::Security::Advisor::ADVISE_GOOD,
-                    'text' => ['SCGI, suEXEC, and mod_ruid2 are enabled.'],
+                    'text' => $self->_lh->maketext('SCGI, suEXEC, and mod_ruid2 are enabled.'),
                 }
             );
         }
@@ -122,13 +122,13 @@ sub _check_scgiwrap {
                 {
                     'key'        => 'Scgiwrap_suEXEC_is_disabled',
                     'type'       => $Cpanel::Security::Advisor::ADVISE_BAD,
-                    'text'       => ['suEXEC is disabled.'],
-                    'suggestion' => [
+                    'text'       => $self->_lh->maketext('suEXEC is disabled.'),
+                    'suggestion' => $self->_lh->maketext(
                         'Enable suEXEC on the “[output,url,_1,Configure PHP and suEXEC,_2,_3]” page.',
                         $self->base_path('scripts2/phpandsuexecconf'),
                         'target',
                         '_blank'
-                    ],
+                    ),
                 }
             );
         }
@@ -137,7 +137,7 @@ sub _check_scgiwrap {
                 {
                     'key'  => 'Scgiwrap_suEXEC_is_disabled_mod_ruid2_is_installed',
                     'type' => $Cpanel::Security::Advisor::ADVISE_GOOD,
-                    'text' => ['suEXEC is disabled; however mod_ruid2 is installed.'],
+                    'text' => $self->_lh->maketext('suEXEC is disabled; however mod_ruid2 is installed.'),
                 }
             );
         }
@@ -147,13 +147,13 @@ sub _check_scgiwrap {
             {
                 'key'        => 'Scgiwrap_SCGI_is_enabled',
                 'type'       => $Cpanel::Security::Advisor::ADVISE_BAD,
-                'text'       => ['SCGI is enabled.'],
-                'suggestion' => [
+                'text'       => $self->_lh->maketext('SCGI is enabled.'),
+                'suggestion' => $self->_lh->maketext(
                     'Turn off SCGI and enable the more secure suEXEC in the “[output,url,_1,Configure PHP and suEXEC,_2,_3]” page.',
                     $self->base_path('scripts2/phpandsuexecconf'),
                     'target',
                     '_blank'
-                ],
+                ),
             }
         );
 

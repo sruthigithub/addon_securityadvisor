@@ -30,6 +30,7 @@ use strict;
 use Cpanel::Config::Hulk ();
 use Cpanel::PsParser     ();
 use Cpanel::LoadFile     ();
+
 use base 'Cpanel::Security::Advisor::Assessors';
 
 sub generate_advice {
@@ -51,7 +52,7 @@ sub _check_for_brute_force_protection {
             {
                 'key'  => 'Brute_protection_enabled',
                 'type' => $Cpanel::Security::Advisor::ADVISE_GOOD,
-                'text' => ['cPHulk Brute Force Protection is enabled.'],
+                'text' => $self->_lh->maketext('cPHulk Brute Force Protection is enabled.'),
             }
         );
 
@@ -63,13 +64,13 @@ sub _check_for_brute_force_protection {
                     {
                         'key'        => 'Brute_csf_installed_but_disabled_1',
                         'type'       => $Cpanel::Security::Advisor::ADVISE_BAD,
-                        'text'       => ['CSF is installed, but appears to be disabled.'],
-                        'suggestion' => [
+                        'text'       => $self->_lh->maketext('CSF is installed, but appears to be disabled.'),
+                        'suggestion' => $self->_lh->maketext(
                             'Click “Firewall Enable“ in the “[output,url,_1,ConfigServer Security & Firewall,_2,_3]” area. Alternately, run “csf -e“ from the command line.',
                             $self->base_path('cgi/configserver/csf.cgi'),
                             'target',
                             '_blank'
-                        ],
+                        ),
                     }
                 );
             }
@@ -78,8 +79,8 @@ sub _check_for_brute_force_protection {
                     {
                         'key'        => 'Brute_csf_installed_but_disabled_2',
                         'type'       => $Cpanel::Security::Advisor::ADVISE_BAD,
-                        'text'       => ['CSF is installed, but appears to be disabled.'],
-                        'suggestion' => ['Run “csf -e“ from the command line.'],
+                        'text'       => $self->_lh->maketext('CSF is installed, but appears to be disabled.'),
+                        'suggestion' => $self->_lh->maketext('Run “csf -e“ from the command line.'),
                     }
                 );
             }
@@ -89,7 +90,7 @@ sub _check_for_brute_force_protection {
                 {
                     'key'  => 'Brute_csf_installed_lfd_running',
                     'type' => $Cpanel::Security::Advisor::ADVISE_GOOD,
-                    'text' => ['CSF is installed, and LFD is running.'],
+                    'text' => $self->_lh->maketext('CSF is installed, and LFD is running.'),
                 }
             );
         }
@@ -99,13 +100,13 @@ sub _check_for_brute_force_protection {
                     {
                         'key'        => 'Brute_csf_installed_lfd_not_running_1',
                         'type'       => $Cpanel::Security::Advisor::ADVISE_BAD,
-                        'text'       => ['CSF is installed, but LFD is not running.'],
-                        'suggestion' => [
+                        'text'       => $self->_lh->maketext('CSF is installed, but LFD is not running.'),
+                        'suggestion' => $self->_lh->maketext(
                             'Click “lfd Restart“ in the “[output,url,_1,ConfigServer Security & Firewall,_2,_3]” area. Alternately, run “csf --lfd restart“ from the command line.',
                             $self->base_path('cgi/configserver/csf.cgi'),
                             'target',
                             '_blank'
-                        ],
+                        ),
                     }
                 );
             }
@@ -114,8 +115,8 @@ sub _check_for_brute_force_protection {
                     {
                         'key'        => 'Brute_csf_installed_lfd_not_running_2',
                         'type'       => $Cpanel::Security::Advisor::ADVISE_BAD,
-                        'text'       => ['CSF is installed, but LFD is not running.'],
-                        'suggestion' => ['Run “csf --lfd restart“ from the command line.'],
+                        'text'       => $self->_lh->maketext('CSF is installed, but LFD is not running.'),
+                        'suggestion' => $self->_lh->maketext('Run “csf --lfd restart“ from the command line.'),
                     }
                 );
             }
@@ -126,14 +127,14 @@ sub _check_for_brute_force_protection {
             {
                 'key'        => 'Brute_force_protection_not_enabled',
                 'type'       => $Cpanel::Security::Advisor::ADVISE_BAD,
-                'text'       => ['No brute force protection detected'],
-                'suggestion' => [
+                'text'       => $self->_lh->maketext('No brute force protection detected'),
+                'suggestion' => $self->_lh->maketext(
                     'Enable cPHulk Brute Force Protection in the “[output,url,_1,cPHulk Brute Force Protection,_2,_3]” area.',
                     $self->base_path('cgi/tweakcphulk.cgi'),
                     'target',
                     '_blank'
 
-                ],
+                ),
             }
         );
     }

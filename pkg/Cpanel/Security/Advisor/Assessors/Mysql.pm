@@ -46,13 +46,13 @@ sub generate_advice {
     if ( !$self->_sqlcmd('SELECT 1;') ) {
         $self->add_bad_advice(
             'key'        => 'Mysql_can_not_connect_to_mysql',
-            'text'       => ['Cannot connect to MySQL server.'],
-            'suggestion' => [
+            'text'       => $self->_lh->maketext('Cannot connect to MySQL server.'),
+            'suggestion' => $self->_lh->maketext(
                 'Enable MySQL database service',
                 $self->base_path('scripts/srvmng'),
                 'target',
                 '_blank'
-            ],
+            ),
 
         );
         return;
@@ -79,16 +79,14 @@ sub _check_for_db_test {
     if ( !$exists ) {
         $self->add_good_advice(
             'key'  => 'Mysql_test_database_does_not_exist',
-            'text' => "MySQL test database doesn't exist."
+            'text' => $self->_lh->maketext("MySQL test database doesn't exist.")
         );
     }
     else {
         $self->add_bad_advice(
             'key'        => 'Mysql_test_database_exists',
-            'text'       => "MySQL test database exists.",
-            'suggestion' => q{MySQL test database is used by numerous attacks and should be removed.
-				> mysql -e 'drop database test'
-			}
+            'text'       => $self->_lh->maketext("MySQL test database exists."),
+            'suggestion' => $self->_lh->maketext(q{MySQL test database is used by numerous attacks and should be removed by running “mysql -e 'drop database test'”.}),
         );
 
     }
@@ -115,14 +113,14 @@ sub _check_for_anonymous_users {
     if ($ok) {
         $self->add_good_advice(
             'key'  => 'Mysql_no_anonymous_users',
-            'text' => "MySQL check for anonymous users"
+            'text' => $self->_lh->maketext("MySQL check for anonymous users")
         );
     }
     else {
         $self->add_bad_advice(
             'key'        => 'Mysql_found_anonymous_users',
-            'text'       => "You have some anonymous mysql users",
-            'suggestion' => q{Remove mysql anonymous mysql users: > mysql -e 'drop user ""'}
+            'text'       => $self->_lh->maketext("You have some anonymous mysql users"),
+            'suggestion' => $self->_lh->maketext(q{Remove mysql anonymous mysql users: > mysql -e 'drop user ""'})
         );
     }
 
@@ -169,23 +167,23 @@ sub _check_for_public_bind_address {
         if ( Cpanel::IP::Loopback::is_loopback($bind_address) ) {
             $self->add_good_advice(
                 'key'  => 'Mysql_listening_only_to_local_address',
-                'text' => "MySQL is listening only on a local address."
+                'text' => $self->_lh->maketext("MySQL is listening only on a local address.")
             );
         }
         elsif ( ( ( $version == 4 ) && @deny_rules && ( ( $bind_address =~ /ffff/i ) ? @deny_rules_6 : 1 ) ) || ( ( $version == 6 ) && @deny_rules_6 ) || ( csf_port_closed($port) ) ) {
             $self->add_good_advice(
                 'key'  => 'Mysql_port_blocked_by_firewall_1',
-                'text' => "The MySQL port is blocked by the firewall, effectively allowing only local connections."
+                'text' => $self->_lh->maketext("The MySQL port is blocked by the firewall, effectively allowing only local connections.")
             );
         }
         else {
             $self->add_bad_advice(
                 'key'        => 'Mysql_listening_on_public_address',
-                'text'       => "The MySQL service is currently configured to listen on a public address: (bind-address=$bind_address)",
-                'suggestion' => [
+                'text'       => $self->_lh->maketext( "The MySQL service is currently configured to listen on a public address: (bind-address=[_1])", $bind_address ),
+                'suggestion' => $self->_lh->maketext(
                     'Configure bind-address=127.0.0.1 in /etc/my.cnf, or close port [_1] in the server’s firewall.',
                     $port
-                ],
+                ),
             );
         }
     }
@@ -193,17 +191,17 @@ sub _check_for_public_bind_address {
         if ( ( @deny_rules && @deny_rules_6 ) || ( csf_port_closed($port) ) ) {
             $self->add_good_advice(
                 'key'  => 'Mysql_port_blocked_by_firewall_2',
-                'text' => "The MySQL port is blocked by the firewall, effectively allowing only local connections."
+                'text' => $self->_lh->maketext("The MySQL port is blocked by the firewall, effectively allowing only local connections.")
             );
         }
         else {
             $self->add_bad_advice(
                 'key'        => 'Mysql_listening_on_all_interfaces',
-                'text'       => 'The MySQL service is currently configured to listen on all interfaces: (bind-address=*)',
-                'suggestion' => [
+                'text'       => $self->_lh->maketext('The MySQL service is currently configured to listen on all interfaces: (bind-address=*)'),
+                'suggestion' => $self->_lh->maketext(
                     'Configure bind-address=127.0.0.1 in /etc/my.cnf, or close port [_1] in the server’s firewall.',
                     $port
-                ],
+                ),
             );
         }
     }

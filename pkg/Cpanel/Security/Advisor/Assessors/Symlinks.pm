@@ -100,8 +100,8 @@ sub _check_for_symlink_kernel_patch {
     unless ( $self->_enforcing_symlink_ownership() ) {
         $self->add_bad_advice(
             'key'        => q{Symlinks_no_kernel_support_for_ownership_attacks_1},
-            'text'       => ['Kernel does not support the prevention of symlink ownership attacks.'],
-            'suggestion' => ['You do not appear to have any symlink protection enabled through a properly patched kernel on this server, which provides additional protect beyond those solutions employed in userland. Please review the following documentation to learn how to apply this protection.'],
+            'text'       => $self->_lh->maketext('Kernel does not support the prevention of symlink ownership attacks.'),
+            'suggestion' => $self->_lh->maketext('You do not appear to have any symlink protection enabled through a properly patched kernel on this server, which provides additional protect beyond those solutions employed in userland. Please review the following documentation to learn how to apply this protection.'),
         );
 
         return 1;
@@ -112,8 +112,8 @@ sub _check_for_symlink_kernel_patch {
     unless ( defined $gid ) {
         $self->add_bad_advice(
             'key'        => q{Symlinks_no_kernel_support_for_ownership_attacks_2},
-            'text'       => ['Kernel does not support the prevention of symlink ownership attacks.'],
-            'suggestion' => ['You do not appear to have any symlink protection enabled through a properly patched kernel on this server, which provides additional protect beyond those solutions employed in userland. Please review the following documentation to learn how to apply this protection.'],
+            'text'       => $self->_lh->maketext('Kernel does not support the prevention of symlink ownership attacks.'),
+            'suggestion' => $self->_lh->maketext('You do not appear to have any symlink protection enabled through a properly patched kernel on this server, which provides additional protect beyond those solutions employed in userland. Please review the following documentation to learn how to apply this protection.'),
         );
 
         return 1;
@@ -136,8 +136,8 @@ sub _check_for_symlink_kernel_patch {
         if ( open my $fh, '<', $link ) {
             $self->add_bad_advice(
                 'key'        => q{Symlinks_protection_not_enabled_for_centos6},
-                'text'       => ['Kernel symlink protection is not enabled for CentOS 6.'],
-                'suggestion' => ['You do not appear to have any symlink protection enabled through a properly patched kernel on this server, which provides additional protect beyond those solutions employed in userland. Please review the following documentation to learn how to apply this protection.'],
+                'text'       => $self->_lh->maketext('Kernel symlink protection is not enabled for CentOS 6.'),
+                'suggestion' => $self->_lh->maketext('You do not appear to have any symlink protection enabled through a properly patched kernel on this server, which provides additional protect beyond those solutions employed in userland. Please review the following documentation to learn how to apply this protection.'),
             );
 
             close $fh;
@@ -145,7 +145,7 @@ sub _check_for_symlink_kernel_patch {
         else {
             $self->add_good_advice(
                 'key'  => q{Symlinks_protection_enabled_for_centos6},
-                'text' => ['Kernel symlink protection is enabled for CentOS 6.'],
+                'text' => $self->_lh->maketext('Kernel symlink protection is enabled for CentOS 6.'),
             );
         }
     }
