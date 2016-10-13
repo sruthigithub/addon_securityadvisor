@@ -101,7 +101,12 @@ sub _check_for_symlink_kernel_patch {
         $self->add_bad_advice(
             'key'        => q{Symlinks_no_kernel_support_for_ownership_attacks_1},
             'text'       => $self->_lh->maketext('Kernel does not support the prevention of symlink ownership attacks.'),
-            'suggestion' => $self->_lh->maketext('You do not appear to have any symlink protection enabled through a properly patched kernel on this server, which provides additional protect beyond those solutions employed in userland. Please review the following documentation to learn how to apply this protection.'),
+            'suggestion' => $self->_lh->maketext(
+                'You do not appear to have any symlink protection enabled through a properly patched kernel on this server, which provides additional protections beyond those solutions employed in userland. Please review [output,url,_1,the documentation,_2,_3] to learn how to apply this protection.',
+                'https://go.cpanel.net/apachesymlink',
+                'target',
+                '_blank'
+            ),
         );
 
         return 1;
@@ -113,7 +118,12 @@ sub _check_for_symlink_kernel_patch {
         $self->add_bad_advice(
             'key'        => q{Symlinks_no_kernel_support_for_ownership_attacks_2},
             'text'       => $self->_lh->maketext('Kernel does not support the prevention of symlink ownership attacks.'),
-            'suggestion' => $self->_lh->maketext('You do not appear to have any symlink protection enabled through a properly patched kernel on this server, which provides additional protect beyond those solutions employed in userland. Please review the following documentation to learn how to apply this protection.'),
+            'suggestion' => $self->_lh->maketext(
+                'You do not appear to have any symlink protection enabled through a properly patched kernel on this server, which provides additional protections beyond those solutions employed in userland. Please review [output,url,_1,the documentation,_2,_3] to learn how to apply this protection.',
+                'https://go.cpanel.net/apachesymlink',
+                'target',
+                '_blank'
+            ),
         );
 
         return 1;
