@@ -35,6 +35,7 @@ use Cpanel::SafeRun::Errors    ();
 use Cpanel::Config::Httpd      ();
 use Cpanel::Validate::Username ();
 use Cpanel::GenSysInfo         ();
+use Cpanel::DataStore          ();
 
 sub version {
     return '1.03';
@@ -183,10 +184,14 @@ sub _centos_symlink_protection {
     my $warn                 = $Cpanel::Security::Advisor::ADVISE_WARN;
     my $bad                  = $Cpanel::Security::Advisor::ADVISE_BAD;
     my $httpd_binary         = Cpanel::LoadFile::loadfile( _get_httpd_path(), { 'binmode' => 1 } );
-    my $bluehost             = grep { /SPT_DOCROOT/ } $httpd_binary;
     my $rack911              = grep { /UnhardenedSymLinks/ } $httpd_binary;
     my $jailedapache         = $security_advisor_obj->{'cpconf'}->{'jailapache'};
     my $sysinfo              = Cpanel::GenSysInfo::run();
+
+    my $is_ea4 = ( defined &Cpanel::Config::Httpd::is_ea4 && Cpanel::Config::Httpd::is_ea4() ) ? 1 : 0;
+    my $bluehost_ea3 = ($is_ea4) ? 0 : grep { /SPT_DOCROOT/ } $httpd_binary;
+    my $local_settings = ($is_ea4) ? Cpanel::DataStore::fetch_ref('/var/cpanel/conf/apache/local') : undef;
+    my $bluehost_ea4 = ($is_ea4) ? ( exists $local_settings->{main}->{symlink_protect} && $local_settings->{main}->{symlink_protect}->{item}->{symlink_protect} eq 'On' ) : 0;
 
     if ($ruid) {
         if ($jailedapache) {
@@ -214,7 +219,7 @@ sub _centos_symlink_protection {
             );
         }
     }
-    if ($bluehost) {
+    if ( $bluehost_ea3 || $bluehost_ea4 ) {
         $security_advisor_obj->add_advice(
             {
                 'key'        => 'Apache_bluehost_provided_symlink_protection',
@@ -222,7 +227,7 @@ sub _centos_symlink_protection {
                 'text'       => $self->_lh->maketext('Apache Symlink Protection: the Bluehost provided Apache patch is in effect'),
                 'suggestion' => $self->_lh->maketext(
                     "It appears that the Bluehost provided Apache patch is being used to provide symlink protection. This is less than optimal. Please review [output,url,_1,Symlink Race Condition Protection,_2,_3].",
-                    'https://go.cpanel.net/apachesymlink',
+                    ($is_ea4) ? 'https://go.cpanel.net/EA4Symlink' : 'https://go.cpanel.net/apachesymlink',
                     'target',
                     '_blank'
                 ),
@@ -244,7 +249,7 @@ sub _centos_symlink_protection {
             }
         );
     }
-    if ( !($ruid) && !($rack911) && !($bluehost) && $sysinfo->{'rpm_dist_ver'} != 6 ) {    # if CentOS 6 is detected, defer to the Assessors::Symlinks
+    if ( !($ruid) && !($rack911) && !($bluehost_ea3) && !($bluehost_ea4) && $sysinfo->{'rpm_dist_ver'} != 6 ) {    # if CentOS 6 is detected, defer to the Assessors::Symlinks
         $security_advisor_obj->add_advice(
             {
                 'key'        => 'Apache_no_symlink_protection',
