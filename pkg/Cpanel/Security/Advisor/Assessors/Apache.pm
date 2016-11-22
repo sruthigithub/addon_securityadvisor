@@ -36,6 +36,7 @@ use Cpanel::Config::Httpd      ();
 use Cpanel::Validate::Username ();
 use Cpanel::GenSysInfo         ();
 use Cpanel::DataStore          ();
+use Cpanel::RestartSrv         ();
 
 sub version {
     return '1.03';
@@ -307,14 +308,14 @@ sub _cloudlinux_symlink_protection {
                 }
             );
         }
-        elsif ( Cpanel::SafeRun::Simple::saferun( '/etc/init.d/cagefs', 'status' ) !~ /running/ ) {
+        elsif ( !_is_cagefs_running() ) {
             $security_advisor_obj->add_advice(
                 {
                     'key'        => 'Apache_cagefs_installed_but_not_running',
                     'type'       => $warn,
                     'text'       => $self->_lh->maketext('Apache Symlink Protection: CloudLinux CageFS is installed but not currently running'),
                     'suggestion' => $self->_lh->maketext(
-                        "CageFS appears to be installed but is not currently running. CageFS adds filesystem level security to your users by isolating their filesystems from each other and many other parts of the system. You can start CageFS at the command line with “/etc/init.d/cagefs start”. For further information, see the [output,url,_1,CageFS Documentation,_2,_3].",
+                        "CageFS appears to be installed but is not currently running. CageFS adds filesystem level security to your users by isolating their filesystems from each other and many other parts of the system. For further information, see the [output,url,_1,CageFS Documentation,_2,_3].",
                         'http://docs.cloudlinux.com/index.html?cagefs.html',
                         'target',
                         '_blank'
@@ -382,6 +383,19 @@ sub _cloudlinux_symlink_protection {
 
     }
     return 1;
+}
+
+sub _is_cagefs_running {
+    my $self = shift;
+
+    if ( Cpanel::RestartSrv::has_service_via_systemd('cagefs') ) {
+        return ( Cpanel::SafeRun::Simple::saferun( '/usr/bin/systemctl', 'is-active', 'cagefs' ) eq 'active' ) ? 1 : 0;
+    }
+    else {
+        return ( Cpanel::SafeRun::Simple::saferun( '/etc/init.d/cagefs', 'status' ) =~ /running/ ) ? 1 : 0;
+    }
+
+    return;
 }
 
 sub _grsecurity_symlink_protection {
