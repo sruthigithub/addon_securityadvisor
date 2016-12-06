@@ -212,7 +212,7 @@ sub _centos_symlink_protection {
                     'text'       => $self->_lh->maketext('Apache Symlink Protection: mod_ruid2 loaded in Apache'),
                     'suggestion' => $self->_lh->maketext(
                         "mod_ruid2 is enabled in Apache. To ensure that this aids in protecting from symlink attacks, Jailed Apache needs to be enabled. If this not set properly, you should see an indication in Security Advisor (this page) in the sections for “Apache vhosts are not segmented or chroot()ed” and “Users running outside of the jail”. If those are not present, your users should be properly jailed. Review [output,url,_1,Symlink Race Condition Protection,_2,_3] for further information.",
-                        'https://go.cpanel.net/apachesymlink',
+                        ($is_ea4) ? 'https://go.cpanel.net/EA4Symlink' : 'https://go.cpanel.net/apachesymlink',
                         'target',
                         '_blank'
                     ),
@@ -243,7 +243,7 @@ sub _centos_symlink_protection {
                 'text'       => $self->_lh->maketext('Apache Symlink Protection: the Rack911 provided Apache patch is in effect'),
                 'suggestion' => $self->_lh->maketext(
                     "It appears that the Rack911 provided Apache patch is being used to provide symlink protection. This is less than optimal. Please review [output,url,_1,Symlink Race Condition Protection,_2,_3].",
-                    'https://go.cpanel.net/apachesymlink',
+                    ($is_ea4) ? 'https://go.cpanel.net/EA4Symlink' : 'https://go.cpanel.net/apachesymlink',
                     'target',
                     '_blank',
                 ),
@@ -258,7 +258,7 @@ sub _centos_symlink_protection {
                 'text'       => $self->_lh->maketext('No symlink protection detected'),
                 'suggestion' => $self->_lh->maketext(
                     'You do not appear to have any symlink protection enabled on this server. You can protect against this in multiple ways. Please review the following [output,url,_1,documentation,_2,_3] to find a solution that is suited to your needs.',
-                    'https://go.cpanel.net/apachesymlink',
+                    ($is_ea4) ? 'https://go.cpanel.net/EA4Symlink' : 'https://go.cpanel.net/apachesymlink',
                     'target',
                     '_blank'
                 ),
@@ -282,6 +282,8 @@ sub _cloudlinux_symlink_protection {
     );
     chomp( $sysctl_fs_enforce_symlinksifowner, $sysctl_fs_symlinkown_gid );
 
+    my $is_ea4 = ( defined &Cpanel::Config::Httpd::is_ea4 && Cpanel::Config::Httpd::is_ea4() ) ? 1 : 0;
+
     if ( -x '/usr/sbin/cagefsctl' ) {
         my $uncaged_user_count = grep {
             !/^\d+ disabled/
@@ -302,7 +304,7 @@ sub _cloudlinux_symlink_protection {
                         'http://docs.cloudlinux.com/index.html?cagefs.html',
                         'target',
                         '_blank',
-                        'https://go.cpanel.net/apachesymlink',
+                        ($is_ea4) ? 'https://go.cpanel.net/EA4Symlink' : 'https://go.cpanel.net/apachesymlink',
                         "$uncaged_user_count"
                     ),
                 }
@@ -376,7 +378,7 @@ sub _cloudlinux_symlink_protection {
                     'http://docs.cloudlinux.com/index.html?cagefs.html',
                     'target',
                     '_blank',
-                    'https://go.cpanel.net/apachesymlink'
+                    ($is_ea4) ? 'https://go.cpanel.net/EA4Symlink' : 'https://go.cpanel.net/apachesymlink'
                 ),
             }
         );
