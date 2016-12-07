@@ -31,8 +31,9 @@ use warnings;
 
 use Lchown ();
 
-use Cpanel::TempFile   ();
-use Cpanel::GenSysInfo ();
+use Cpanel::TempFile      ();
+use Cpanel::GenSysInfo    ();
+use Cpanel::Config::Httpd ();
 
 use base 'Cpanel::Security::Advisor::Assessors';
 
@@ -93,6 +94,8 @@ sub _check_for_symlink_kernel_patch {
     #
     return 1 unless $sysinfo->{'rpm_dist_ver'} == 6;
 
+    my $is_ea4 = ( defined &Cpanel::Config::Httpd::is_ea4 && Cpanel::Config::Httpd::is_ea4() ) ? 1 : 0;
+
     #
     # If a grsecurity kernel is not detected, then we should recommend that
     # the administrator install one.
@@ -103,7 +106,7 @@ sub _check_for_symlink_kernel_patch {
             'text'       => $self->_lh->maketext('Kernel does not support the prevention of symlink ownership attacks.'),
             'suggestion' => $self->_lh->maketext(
                 'You do not appear to have any symlink protection enabled through a properly patched kernel on this server, which provides additional protections beyond those solutions employed in userland. Please review [output,url,_1,the documentation,_2,_3] to learn how to apply this protection.',
-                'https://go.cpanel.net/apachesymlink',
+                ($is_ea4) ? 'https://go.cpanel.net/EA4Symlink' : 'https://go.cpanel.net/apachesymlink',
                 'target',
                 '_blank'
             ),
@@ -120,7 +123,7 @@ sub _check_for_symlink_kernel_patch {
             'text'       => $self->_lh->maketext('Kernel does not support the prevention of symlink ownership attacks.'),
             'suggestion' => $self->_lh->maketext(
                 'You do not appear to have any symlink protection enabled through a properly patched kernel on this server, which provides additional protections beyond those solutions employed in userland. Please review [output,url,_1,the documentation,_2,_3] to learn how to apply this protection.',
-                'https://go.cpanel.net/apachesymlink',
+                ($is_ea4) ? 'https://go.cpanel.net/EA4Symlink' : 'https://go.cpanel.net/apachesymlink',
                 'target',
                 '_blank'
             ),
