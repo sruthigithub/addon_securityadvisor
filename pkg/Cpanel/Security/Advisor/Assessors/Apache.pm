@@ -408,8 +408,8 @@ sub _grsecurity_symlink_protection {
     my $warn                 = $Cpanel::Security::Advisor::ADVISE_WARN;
     my $bad                  = $Cpanel::Security::Advisor::ADVISE_BAD;
     my ( $sysctl_kernel_grsecurity_symlinkown_gid, $sysctl_kernel_grsecurity_enforce_symlinksifowner ) = (
-        Cpanel::SafeRun::Simple::saferun( 'sysctl', '-n', 'kernel.grsecurity.symlinkown_gid' ),
-        Cpanel::SafeRun::Simple::saferun( 'sysctl', '-n', 'kernel.grsecurity.enforce_symlinksifowner' )
+        Cpanel::SafeRun::Simple::saferunallerrors( 'sysctl', '-n', 'kernel.grsecurity.symlinkown_gid' ),
+        Cpanel::SafeRun::Simple::saferunallerrors( 'sysctl', '-n', 'kernel.grsecurity.enforce_symlinksifowner' )
     );
     if ( ( $sysctl_kernel_grsecurity_symlinkown_gid =~ /unknown/ ) && ( $sysctl_kernel_grsecurity_enforce_symlinksifowner =~ /unknown/ ) ) {
         $security_advisor_obj->add_advice(
