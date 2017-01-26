@@ -1,6 +1,6 @@
 package Cpanel::Security::Advisor::Assessors::Kernel;
 
-# Copyright (c) 2014, cPanel, Inc.
+# Copyright 2017, cPanel, Inc.
 # All rights reserved.
 # http://cpanel.net
 #
@@ -29,20 +29,123 @@ package Cpanel::Security::Advisor::Assessors::Kernel;
 use strict;
 use base 'Cpanel::Security::Advisor::Assessors';
 use Cpanel::SafeRun::Errors ();
+use Cpanel::JSON            ();
 use Cpanel::Kernel          ();
 use Cpanel::OSSys::Env      ();
+use Cpanel::Version         ();
+use Cpanel::RPM             ();
+
+our $KC_CP_VERSION = q{11.63};
 
 my $kc_kernelversion = kcare_kernel_version("uname");
 
 sub version {
-    return '1.02';
+    return '1.03';
 }
 
 sub generate_advice {
     my ($self) = @_;
+
+    # support for integrated KerneCare purchase/install is supported in 11.64 and above
+    if ( Cpanel::Version::compare( Cpanel::Version::getversionnumber(), '>=', $KC_CP_VERSION ) ) {
+        $self->_suggest_kernelcare;
+    }
+
     $self->_check_for_kernel_version;
 
     return 1;
+}
+
+sub _suggest_kernelcare {
+    my ($self) = @_;
+
+    my $environment  = Cpanel::OSSys::Env::get_envtype();
+    my $manage2_data = _get_manage2_kernelcare_data();
+    my $rpm          = Cpanel::RPM->new();
+
+    if (    not $rpm->has_rpm(q{kernelcare})
+        and not( $environment eq 'virtuozzo' || $environment eq 'lxc' )
+        and not $manage2_data->{'disabled'} ) {
+
+        my $label_text     = 'Upgrade to KernelCare.';
+        my $contact_method = '';
+        my $target         = '_parent';
+        my $url_alt_text   = $label_text;
+        my $url_to_use     = '../../../scripts12/purchase_kernelcare_init';
+
+        # check to see this IP has a valid license even if it is not installed
+        require Whostmgr::KernelCare;
+        my $handler = Whostmgr::KernelCare->new();
+        if ( $handler->_verify_kernelcare_license() ) {
+            $label_text   = 'Valid KernelCare License Found, but KernelCare is Not Installed.';
+            $url_alt_text = 'Click to install';
+            $url_to_use   = '../../../scripts12/purchase_kernelcare_completion?order_status=success';
+            $self->add_bad_advice(
+                'key'        => 'Kernel_kernelcare_valid_license_but_not_installed',
+                'text'       => [$label_text],
+                'suggestion' => $self->_lh->maketext( 'KernelCare provides an easy, effortless way of keeping your operating system kernel up to date without needing to reboot your server. A valid license has already been purchased. [_1] [output,url,_2,_3,_4,_5].', $contact_method, $url_to_use, $url_alt_text, 'target', $target, ),
+            );
+        }
+        else {
+            if ( $manage2_data->{'url'} ne '' ) {
+                $url_to_use = $manage2_data->{'url'};
+            }
+            elsif ( $manage2_data->{'email'} ne '' ) {
+                $target         = '_blank';
+                $url_to_use     = 'mailto:' . $manage2_data->{'email'};
+                $contact_method = 'For more information,';
+                $url_alt_text   = 'email your provider';
+            }
+            $self->add_warn_advice(
+                'key'        => 'Kernel_kernelcare_purchase',
+                'text'       => [$label_text],
+                'suggestion' => $self->_lh->maketext( 'KernelCare provides an easy, effortless way of keeping your operating system kernel up to date without needing to reboot your server. [_1] [output,url,_2,_3,_4,_5].', $contact_method, $url_to_use, $url_alt_text, 'target', $target, ),
+            );
+
+        }
+    }
+
+    return 1;
+}
+
+sub _get_manage2_kernelcare_data {
+
+    # figure out what manage2 url to use...
+    my $manage2 = 'manage2.cpanel.net';
+    if ( -e '/var/cpanel/dev_sandbox' ) {
+        $manage2 = 'swaaat.manage2.manage.devel.cpanel.net';
+    }
+
+    # get our companyid
+    my $companyfile = q{/var/cpanel/companyid};
+    my $cid         = q{};
+    if ( open my $fh, "<", $companyfile ) {
+        $cid = <$fh>;
+        chomp $cid;
+        close $fh;
+    }
+
+    my $url = sprintf( 'https://%s/kernelcare.cgi?companyid=%d', $manage2, $cid );
+    my $raw_resp = HTTP::Tiny->new( 'timeout' => 10 )->get($url);
+    my $json_resp;
+
+    if ( $raw_resp->{'success'} ) {
+        eval { $json_resp = Cpanel::JSON::Load( $raw_resp->{'content'} ) };
+
+        if ($@) {
+            $json_resp = { disabled => 0, url => '', email => '' };
+        }
+    }
+    else {
+        $json_resp = { disabled => 0, url => '', email => '' };
+    }
+
+    # These are useful for testing; uncomment as needed to force behavior.
+    # $json_resp = { disabled => 1, url => '', email => '' };
+    # $json_resp = { disabled => 0, url => 'http://tester.com', email => '' };
+    # $json_resp = { disabled => 0, url => '', email => 'test@tester.com' };
+
+    return $json_resp;
 }
 
 sub _check_for_kernel_version {
