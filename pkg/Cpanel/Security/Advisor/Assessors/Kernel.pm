@@ -47,7 +47,12 @@ if ( Cpanel::Logger::is_sandbox() ) {
     $KC_M2_URL     = q{swaaat.manage2.manage.devel.cpanel.net};
 }
 
+local %ENV = %ENV;
+
 my $kc_kernelversion = kcare_kernel_version("uname");
+my $port             = $ENV{'SERVER_PORT'};
+my $host             = $ENV{'HTTP_HOST'};
+my $security_token   = $ENV{'cp_security_token'} || '';
 
 sub version {
     return '1.03';
@@ -81,13 +86,14 @@ sub _suggest_kernelcare {
         my $contact_method = '';
         my $target         = '_parent';
         my $url_alt_text   = $label_text;
-        my $url_to_use     = '../../../scripts12/purchase_kernelcare_init';
+        my $base_host_url  = sprintf( "https://%s:%s%s", $host, $port, $security_token );
+        my $url_to_use     = sprintf( "%s/scripts12/purchase_kernelcare_init", $base_host_url );
 
         # check to see this IP has a valid license even if it is not installed
         if ( _verify_kernelcare_license() ) {
             $label_text   = 'Valid KernelCare License Found, but KernelCare is Not Installed.';
             $url_alt_text = 'Click to install';
-            $url_to_use   = '../../../scripts12/purchase_kernelcare_completion?order_status=success';
+            $url_to_use   = sprintf( "%s/scripts12/purchase_kernelcare_completion?order_status=success", $base_host_url );
             $self->add_bad_advice(
                 'key'        => 'Kernel_kernelcare_valid_license_but_not_installed',
                 'text'       => [$label_text],
