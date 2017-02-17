@@ -82,25 +82,23 @@ sub _suggest_kernelcare {
         and not( $environment eq 'virtuozzo' || $environment eq 'lxc' )
         and not $manage2_data->{'disabled'} ) {
 
-        my $label_text     = 'Upgrade to KernelCare.';
         my $contact_method = '';
         my $target         = '_parent';
-        my $url_alt_text   = $label_text;
         my $base_host_url  = sprintf( "https://%s:%s%s", $host, $port, $security_token );
         my $url_to_use     = sprintf( "%s/scripts12/purchase_kernelcare_init", $base_host_url );
 
         # check to see this IP has a valid license even if it is not installed
         if ( _verify_kernelcare_license() ) {
-            $label_text   = 'Valid KernelCare License Found, but KernelCare is Not Installed.';
-            $url_alt_text = 'Click to install';
-            $url_to_use   = sprintf( "%s/scripts12/purchase_kernelcare_completion?order_status=success", $base_host_url );
+            my $url_alt_text = 'Click to install';
+            $url_to_use = sprintf( "%s/scripts12/purchase_kernelcare_completion?order_status=success", $base_host_url );
             $self->add_info_advice(
                 'key'        => 'Kernel_kernelcare_valid_license_but_not_installed',
-                'text'       => [$label_text],
+                'text'       => $self->_lh->maketext('Valid KernelCare License Found, but KernelCare is Not Installed.'),
                 'suggestion' => $self->_lh->maketext( 'KernelCare provides an easy, effortless way of keeping your operating system kernel up to date without needing to reboot your server. A valid license has already been purchased. [_1] [output,url,_2,_3,_4,_5].', $contact_method, $url_to_use, $url_alt_text, 'target', $target, ),
             );
         }
         else {
+            my $url_alt_text = 'Upgrade to KernelCare.';
             if ( $manage2_data->{'url'} ne '' ) {
                 $url_to_use = $manage2_data->{'url'};
             }
@@ -112,7 +110,7 @@ sub _suggest_kernelcare {
             }
             $self->add_info_advice(
                 'key'        => 'Kernel_kernelcare_purchase',
-                'text'       => [$label_text],
+                'text'       => $self->_lh->maketext('Upgrade to KernelCare.'),
                 'suggestion' => $self->_lh->maketext( 'KernelCare provides an easy, effortless way of keeping your operating system kernel up to date without needing to reboot your server. [_1] [output,url,_2,_3,_4,_5].', $contact_method, $url_to_use, $url_alt_text, 'target', $target, ),
             );
 
