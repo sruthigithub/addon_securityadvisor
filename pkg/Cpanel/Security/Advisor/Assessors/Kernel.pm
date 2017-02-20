@@ -84,21 +84,21 @@ sub _suggest_kernelcare {
 
         my $contact_method = '';
         my $target         = '_parent';
-        my $base_host_url  = sprintf( "https://%s:%s%s", $host, $port, $security_token );
-        my $url_to_use     = sprintf( "%s/scripts12/purchase_kernelcare_init", $base_host_url );
+        my $url_to_use     = $self->base_path('scripts12/purchase_kernelcare_init');
 
         # check to see this IP has a valid license even if it is not installed
         if ( _verify_kernelcare_license() ) {
             my $url_alt_text = 'Click to install';
-            $url_to_use = sprintf( "%s/scripts12/purchase_kernelcare_completion?order_status=success", $base_host_url );
-            $self->add_info_advice(
+            $url_to_use = $self->base_path('scripts12/purchase_kernelcare_completion?order_status=success');
+
+            $self->add_bad_advice(
                 'key'        => 'Kernel_kernelcare_valid_license_but_not_installed',
                 'text'       => $self->_lh->maketext('Valid KernelCare License Found, but KernelCare is Not Installed.'),
-                'suggestion' => $self->_lh->maketext( 'KernelCare provides an easy, effortless way of keeping your operating system kernel up to date without needing to reboot your server. A valid license has already been purchased. [_1] [output,url,_2,_3,_4,_5].', $contact_method, $url_to_use, $url_alt_text, 'target', $target, ),
+                'suggestion' => $self->_lh->maketext( 'KernelCare provides an easy and effortless way to ensure that your operating system uses the most up-to-date kernel without the need to reboot your server. [_1] [output,url,_2,_3,_4,_5].', $contact_method, $url_to_use, $url_alt_text, 'target', $target, ),
             );
         }
         else {
-            my $url_alt_text = 'Upgrade to KernelCare.';
+            my $url_alt_text = 'Upgrade to KernelCare';
             if ( $manage2_data->{'url'} ne '' ) {
                 $url_to_use = $manage2_data->{'url'};
             }
@@ -108,10 +108,10 @@ sub _suggest_kernelcare {
                 $contact_method = 'For more information,';
                 $url_alt_text   = 'email your provider';
             }
-            $self->add_info_advice(
+            $self->add_warn_advice(
                 'key'        => 'Kernel_kernelcare_purchase',
                 'text'       => $self->_lh->maketext('Upgrade to KernelCare.'),
-                'suggestion' => $self->_lh->maketext( 'KernelCare provides an easy, effortless way of keeping your operating system kernel up to date without needing to reboot your server. [_1] [output,url,_2,_3,_4,_5].', $contact_method, $url_to_use, $url_alt_text, 'target', $target, ),
+                'suggestion' => $self->_lh->maketext( 'KernelCare provides an easy and effortless way to ensure that your operating system uses the most up-to-date kernel without the need to reboot your server. [_1] [output,url,_2,_3,_4,_5].', $contact_method, $url_to_use, $url_alt_text, 'target', $target, ),
             );
 
         }
