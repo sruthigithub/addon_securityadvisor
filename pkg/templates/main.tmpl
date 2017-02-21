@@ -1,21 +1,27 @@
 [% USE Whostmgr -%]
-[% WRAPPER '_defwrapper.tmpl'
+[% USE JSON %]
+
+[% SET wrapper_path = '_defwrapper.tmpl',
+    wrapper_theme = '';
+%]
+
+[% IF Whostmgr.WHM_VERSION >= 63;
+    SET wrapper_path = 'master_templates/master.tmpl'
+        wrapper_theme = 'yui';
+END; %]
+
+[% WRAPPER $wrapper_path
   header = 'cPanel Security Advisor'
   icon = '/addon_plugins/ico-security-advisor.png'
+  theme = wrapper_theme
 scripts = [
 Whostmgr.find_file_url('sharedjs/cometd_optimized.js')
 Whostmgr.find_file_url('sharedjs/yui/yui.cometd_optimized.js')
-]
-;
--%]
+]; -%]
+
 [% PROCESS '_ajaxapp_styles.tmpl' -%]
 [% PROCESS '_ajaxapp_header.tmpl' -%]
-[% USE Whostmgr -%]
-[% USE JSON %]
-[% USE Dumper %]
-
-
-<table style="width: 0 auto;" width="100%"> 
+<table style="width: 0 auto;" width="100%">
   <tbody>
     <tr>
       <td align="left" width="27%">Start Time: <span id="start_time">---</span></td>
@@ -24,7 +30,7 @@ Whostmgr.find_file_url('sharedjs/yui/yui.cometd_optimized.js')
       <td align="right" width="27%">Finish Time: <span id="end_time">---</span></td>
     </tr>
   </tbody>
-</table> 
+</table>
 
 
 <div id="securityadvice">
